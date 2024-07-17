@@ -6,6 +6,6 @@ namespace ToDoListApp.DAL.Models
         public string? Title { get; set; }
         public int UserId { get; set; }
         public User? User { get; set; }
-        public List<Task>? Tasks { get; set; }
+        public List<TaskToDo>? Tasks { get; set; }
     }
 }
