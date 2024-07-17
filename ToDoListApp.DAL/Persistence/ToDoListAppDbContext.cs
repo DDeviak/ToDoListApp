@@ -24,6 +24,10 @@ namespace ToDoListApp.DAL.Persistence
                 .HasMany(tl => tl.Tasks)
                 .WithOne(t => t.Tasklist)
                 .HasForeignKey(t => t.TasklistId);
+
+            modelBuilder.Entity<TaskToDo>()
+                .Property(t => t.Status)
+                .HasConversion<string>();
         }
     }
 }
