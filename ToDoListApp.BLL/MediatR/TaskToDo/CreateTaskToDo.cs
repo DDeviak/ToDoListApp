@@ -4,7 +4,7 @@ using MediatR;
 namespace ToDoListApp.BLL.MediatR.TaskToDo
 {
     using ToDoListApp.DAL.Models;
-    public record CreateTaskToDoCommand(string Title, string Description, int TasklistId, DateTime Deadline) : IRequest<TaskToDo>;
+    public record CreateTaskToDoCommand(string Title, string Description, Guid TasklistId, DateTime Deadline) : IRequest<TaskToDo>;
 
     public class CreateTaskToDoCommandHandler : IRequestHandler<CreateTaskToDoCommand, TaskToDo>
     {

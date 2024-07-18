@@ -4,7 +4,7 @@ using MediatR;
 namespace ToDoListApp.BLL.MediatR.Tasklist
 {
     using ToDoListApp.DAL.Models;
-    public record DeleteTasklistCommand(int Id) : IRequest<Unit>;
+    public record DeleteTasklistCommand(Guid Id) : IRequest<Unit>;
 
     public class DeleteTasklistCommandHandler : IRequestHandler<DeleteTasklistCommand, Unit>
     {

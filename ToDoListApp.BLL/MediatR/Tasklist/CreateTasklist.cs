@@ -4,7 +4,7 @@ using ToDoListApp.DAL.Repositories.Interfaces;
 namespace ToDoListApp.BLL.MediatR.Tasklist
 {
     using ToDoListApp.DAL.Models;
-    public record CreateTasklistCommand(string Title, int UserId) : IRequest<Tasklist>;
+    public record CreateTasklistCommand(string Title, Guid UserId) : IRequest<Tasklist>;
 
     public class CreateTasklistCommandHandler : IRequestHandler<CreateTasklistCommand, Tasklist>
     {

@@ -4,7 +4,7 @@ using MediatR;
 namespace ToDoListApp.BLL.MediatR.TaskToDo
 {
     using ToDoListApp.DAL.Models;
-    public record UpdateTaskToDoCommand(int Id, string Title, string Description, int TasklistId, DateTime Deadline, TaskStatus Status) : IRequest<TaskToDo>;
+    public record UpdateTaskToDoCommand(Guid Id, string Title, string Description, Guid TasklistId, DateTime Deadline, TaskStatus Status) : IRequest<TaskToDo>;
 
     public class UpdateTaskToDoCommandHandler : IRequestHandler<UpdateTaskToDoCommand, TaskToDo>
     {

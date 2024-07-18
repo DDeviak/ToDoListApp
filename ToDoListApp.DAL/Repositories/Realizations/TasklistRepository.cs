@@ -4,7 +4,7 @@ using ToDoListApp.DAL.Repositories.Interfaces;
 
 namespace ToDoListApp.DAL.Repositories.Realizations
 {
-    class TasklistRepository : RepositoryBase<Tasklist>, ITasklistRepository
+    public class TasklistRepository : RepositoryBase<Tasklist>, ITasklistRepository
     {
         public TasklistRepository(ToDoListAppDbContext context) : base(context)
         { }

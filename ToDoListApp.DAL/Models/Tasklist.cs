@@ -2,9 +2,9 @@ namespace ToDoListApp.DAL.Models
 {
     public class Tasklist
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string? Title { get; set; }
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
         public User? User { get; set; }
         public List<TaskToDo>? Tasks { get; set; }
     }
