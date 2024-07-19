@@ -3,27 +3,27 @@ using ToDoListApp.DAL.Repositories.Interfaces;
 
 namespace ToDoListApp.BLL.MediatR.Tasklist
 {
+    using AutoMapper;
+    using ToDoListApp.BLL.DTO.Tasklist;
     using ToDoListApp.DAL.Models;
-    public record CreateTasklistCommand(string Title, Guid UserId) : IRequest<Tasklist>;
+    public record CreateTasklistCommand(TasklistCreateDTO Tasklist) : IRequest<TasklistDTO>;
 
-    public class CreateTasklistCommandHandler : IRequestHandler<CreateTasklistCommand, Tasklist>
+    public class CreateTasklistCommandHandler : IRequestHandler<CreateTasklistCommand, TasklistDTO>
     {
         private readonly ITasklistRepository _tasklistRepository;
+        private readonly IMapper _mapper;
 
-        public CreateTasklistCommandHandler(ITasklistRepository tasklistRepository)
+        public CreateTasklistCommandHandler(ITasklistRepository tasklistRepository, IMapper mapper)
         {
             _tasklistRepository = tasklistRepository;
+            _mapper = mapper;
         }
 
-        public async Task<Tasklist> Handle(CreateTasklistCommand request, CancellationToken cancellationToken)
+        public async Task<TasklistDTO> Handle(CreateTasklistCommand request, CancellationToken cancellationToken)
         {
-            var tasklist = new Tasklist
-            {
-                Title = request.Title,
-                UserId = request.UserId
-            };
-
-            return await _tasklistRepository.CreateAsync(tasklist);
+            Tasklist tasklist = _mapper.Map<Tasklist>(request.Tasklist);
+            tasklist = await _tasklistRepository.CreateAsync(tasklist);
+            return _mapper.Map<TasklistDTO>(tasklist);
         }
     }
 }

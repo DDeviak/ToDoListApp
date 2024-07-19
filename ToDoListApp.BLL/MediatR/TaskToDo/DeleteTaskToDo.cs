@@ -17,7 +17,7 @@ namespace ToDoListApp.BLL.MediatR.TaskToDo
 
         public async Task<Unit> Handle(DeleteTaskToDoCommand request, CancellationToken cancellationToken)
         {
-            var taskToDo = await _taskToDoRepository.GetByIdAsync(request.Id);
+            TaskToDo? taskToDo = await _taskToDoRepository.GetByIdAsync(request.Id);
             if (taskToDo is not null) await _taskToDoRepository.DeleteAsync(taskToDo);
             return Unit.Value;
         }

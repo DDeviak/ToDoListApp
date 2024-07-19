@@ -3,31 +3,26 @@ using MediatR;
 
 namespace ToDoListApp.BLL.MediatR.TaskToDo
 {
+    using AutoMapper;
+    using ToDoListApp.BLL.DTO.TaskToDo;
     using ToDoListApp.DAL.Models;
-    public record UpdateTaskToDoCommand(Guid Id, string Title, string Description, Guid TasklistId, DateTime Deadline, TaskStatus Status) : IRequest<TaskToDo>;
+    public record UpdateTaskToDoCommand(TaskToDoDTO TaskToDo) : IRequest<TaskToDoDTO>;
 
-    public class UpdateTaskToDoCommandHandler : IRequestHandler<UpdateTaskToDoCommand, TaskToDo>
+    public class UpdateTaskToDoCommandHandler : IRequestHandler<UpdateTaskToDoCommand, TaskToDoDTO>
     {
         private readonly ITaskToDoRepository _taskToDoRepository;
-
-        public UpdateTaskToDoCommandHandler(ITaskToDoRepository taskToDoRepository)
+        private readonly IMapper _mapper;
+        public UpdateTaskToDoCommandHandler(ITaskToDoRepository taskToDoRepository, IMapper mapper)
         {
             _taskToDoRepository = taskToDoRepository;
+            _mapper = mapper;
         }
 
-        public async Task<TaskToDo> Handle(UpdateTaskToDoCommand request, CancellationToken cancellationToken)
+        public async Task<TaskToDoDTO> Handle(UpdateTaskToDoCommand request, CancellationToken cancellationToken)
         {
-            var taskToDo = new TaskToDo
-            {
-                Id = request.Id,
-                Title = request.Title,
-                Description = request.Description,
-                TasklistId = request.TasklistId,
-                Deadline = request.Deadline,
-                Status = request.Status
-            };
+            TaskToDo taskToDo = _mapper.Map<TaskToDo>(request.TaskToDo);
             await _taskToDoRepository.UpdateAsync(taskToDo);
-            return taskToDo;
+            return request.TaskToDo;
         }
     }
 }

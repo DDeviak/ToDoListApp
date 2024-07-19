@@ -3,28 +3,27 @@ using ToDoListApp.DAL.Repositories.Interfaces;
 
 namespace ToDoListApp.BLL.MediatR.User
 {
+    using AutoMapper;
+    using ToDoListApp.BLL.DTO.User;
     using ToDoListApp.DAL.Models;
-    public record CreateUserCommand(string Username, string Email, string PasswordHash) : IRequest<User>;
+    public record CreateUserCommand(UserCreateDTO User) : IRequest<UserDTO>;
 
-    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, User>
+    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, UserDTO>
     {
         private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
 
-        public CreateUserCommandHandler(IUserRepository userRepository)
+        public CreateUserCommandHandler(IUserRepository userRepository, IMapper mapper)
         {
             _userRepository = userRepository;
+            _mapper = mapper;
         }
 
-        public async Task<User> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+        public async Task<UserDTO> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            var user = new User
-            {
-                Username = request.Username,
-                Email = request.Email,
-                PasswordHash = request.PasswordHash
-            };
-
-            return await _userRepository.CreateAsync(user);
+            User user = _mapper.Map<User>(request.User);
+            user = await _userRepository.CreateAsync(user);
+            return _mapper.Map<UserDTO>(user);
         }
     }
 }
