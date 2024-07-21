@@ -1,15 +1,16 @@
-using ToDoListApp.DAL.Repositories.Interfaces;
-using ToDoListApp.BLL.DTO.TaskToDo;
 using MediatR;
 
 namespace ToDoListApp.BLL.MediatR.TaskToDo
 {
     using AutoMapper;
+    using FluentResults;
     using ToDoListApp.BLL.DTO.TaskToDo;
     using ToDoListApp.DAL.Models;
-    public record CreateTaskToDoCommand(TaskToDoCreateDTO TaskToDo) : IRequest<TaskToDoCreateDTO>;
+    using ToDoListApp.DAL.Repositories.Interfaces;
 
-    public class CreateTaskToDoCommandHandler : IRequestHandler<CreateTaskToDoCommand, TaskToDoCreateDTO>
+    public record CreateTaskToDoCommand(TaskToDoCreateDTO TaskToDo) : IRequest<Result<TaskToDoDTO>>;
+
+    public class CreateTaskToDoCommandHandler : IRequestHandler<CreateTaskToDoCommand, Result<TaskToDoDTO>>
     {
         private readonly ITaskToDoRepository _taskToDoRepository;
         private readonly IMapper _mapper;
@@ -20,11 +21,11 @@ namespace ToDoListApp.BLL.MediatR.TaskToDo
             _mapper = mapper;
         }
 
-        public async Task<TaskToDoCreateDTO> Handle(CreateTaskToDoCommand request, CancellationToken cancellationToken)
+        public async Task<Result<TaskToDoDTO>> Handle(CreateTaskToDoCommand request, CancellationToken cancellationToken)
         {
             TaskToDo taskToDo = _mapper.Map<TaskToDo>(request.TaskToDo);
             taskToDo = await _taskToDoRepository.CreateAsync(taskToDo);
-            return _mapper.Map<TaskToDoCreateDTO>(taskToDo);
+            return Result.Ok(_mapper.Map<TaskToDoDTO>(taskToDo));
         }
     }
 }

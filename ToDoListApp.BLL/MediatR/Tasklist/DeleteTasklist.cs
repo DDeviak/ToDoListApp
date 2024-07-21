@@ -1,12 +1,14 @@
-using ToDoListApp.DAL.Repositories.Interfaces;
 using MediatR;
 
 namespace ToDoListApp.BLL.MediatR.Tasklist
 {
+    using FluentResults;
     using ToDoListApp.DAL.Models;
-    public record DeleteTasklistCommand(Guid Id) : IRequest<Unit>;
+    using ToDoListApp.DAL.Repositories.Interfaces;
 
-    public class DeleteTasklistCommandHandler : IRequestHandler<DeleteTasklistCommand, Unit>
+    public record DeleteTasklistCommand(Guid Id) : IRequest<Result<Unit>>;
+
+    public class DeleteTasklistCommandHandler : IRequestHandler<DeleteTasklistCommand, Result<Unit>>
     {
         private readonly ITasklistRepository _tasklistRepository;
 
@@ -15,12 +17,15 @@ namespace ToDoListApp.BLL.MediatR.Tasklist
             _tasklistRepository = tasklistRepository;
         }
 
-        public async Task<Unit> Handle(DeleteTasklistCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(DeleteTasklistCommand request, CancellationToken cancellationToken)
         {
             Tasklist? tasklist = await _tasklistRepository.GetByIdAsync(request.Id);
-            if (tasklist is not null) await _tasklistRepository.DeleteAsync(tasklist);
-            return Unit.Value;
+            if (tasklist is not null)
+            {
+                await _tasklistRepository.DeleteAsync(tasklist);
+            }
+
+            return Result.Ok(Unit.Value);
         }
     }
 }
-

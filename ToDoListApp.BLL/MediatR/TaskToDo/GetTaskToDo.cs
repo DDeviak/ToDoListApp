@@ -1,14 +1,16 @@
 using MediatR;
-using ToDoListApp.DAL.Repositories.Interfaces;
 
 namespace ToDoListApp.BLL.MediatR.TaskToDo
 {
     using AutoMapper;
-    using ToDoListApp.DAL.Models;
+    using FluentResults;
     using ToDoListApp.BLL.DTO.TaskToDo;
-    public record GetTaskToDoQuery(Guid Id) : IRequest<TaskToDoCreateDTO?>;
+    using ToDoListApp.DAL.Models;
+    using ToDoListApp.DAL.Repositories.Interfaces;
 
-    public class GetTaskToDoQueryHandler : IRequestHandler<GetTaskToDoQuery, TaskToDoCreateDTO?>
+    public record GetTaskToDoQuery(Guid Id) : IRequest<Result<TaskToDoDTO?>>;
+
+    public class GetTaskToDoQueryHandler : IRequestHandler<GetTaskToDoQuery, Result<TaskToDoDTO?>>
     {
         private readonly ITaskToDoRepository _taskToDoRepository;
         private readonly IMapper _mapper;
@@ -19,10 +21,10 @@ namespace ToDoListApp.BLL.MediatR.TaskToDo
             _mapper = mapper;
         }
 
-        public async Task<TaskToDoCreateDTO?> Handle(GetTaskToDoQuery request, CancellationToken cancellationToken)
+        public async Task<Result<TaskToDoDTO?>> Handle(GetTaskToDoQuery request, CancellationToken cancellationToken)
         {
             TaskToDo? taskToDo = await _taskToDoRepository.GetByIdAsync(request.Id);
-            return _mapper.Map<TaskToDoCreateDTO>(taskToDo);
+            return Result.Ok(taskToDo is null ? null : _mapper.Map<TaskToDoDTO>(taskToDo));
         }
     }
 }
