@@ -11,27 +11,27 @@ namespace ToDoListApp.BLL.MediatR.User
     using ToDoListApp.BLL.Interfaces;
     using ToDoListApp.DAL.Models;
 
-    public record LoginUserCommand(UserLoginDTO UserLogin) : IRequest<Result<UserAuthenticationResponseDTO>>;
+    public record LoginUserQuery(UserLoginDTO UserLogin) : IRequest<Result<UserAuthenticationResponseDTO>>;
 
-    public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, Result<UserAuthenticationResponseDTO>>
+    public class LoginUserQueryHandler : IRequestHandler<LoginUserQuery, Result<UserAuthenticationResponseDTO>>
     {
         private readonly UserManager<User> _userManager;
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
 
-        public LoginUserCommandHandler(UserManager<User> userManager, ITokenService tokenService, IMapper mapper)
+        public LoginUserQueryHandler(UserManager<User> userManager, ITokenService tokenService, IMapper mapper)
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _mapper = mapper;
         }
 
-        public async Task<Result<UserAuthenticationResponseDTO>> Handle(LoginUserCommand request, CancellationToken cancellationToken)
+        public async Task<Result<UserAuthenticationResponseDTO>> Handle(LoginUserQuery request, CancellationToken cancellationToken)
         {
             User? user = await _userManager.FindByEmailAsync(request.UserLogin.Email);
             if (user == null)
             {
-                return Result.Fail("User not found");
+                return Result.Fail("User not found",);
             }
 
             bool isPasswordValid = await _userManager.CheckPasswordAsync(user, request.UserLogin.Password);

@@ -25,7 +25,12 @@ namespace ToDoListApp.BLL.MediatR.TaskToDo
         public async Task<Result<IEnumerable<TaskToDoDTO>>> Handle(GetTaskToDoByTasklistQuery request, CancellationToken cancellationToken)
         {
             Tasklist? tasklist = await _tasklistRepository.GetByIdAsync(request.TasklistId);
-            return Result.Ok(_mapper.ProjectTo<TaskToDoDTO>(tasklist?.Tasks.AsQueryable()).AsEnumerable());
+            if (tasklist is null)
+            {
+                return Result.Fail("Tasklist not found");
+            }
+
+            return Result.Ok(_mapper.ProjectTo<TaskToDoDTO>((tasklist.Tasks ?? []).AsQueryable()).AsEnumerable());
         }
     }
 }

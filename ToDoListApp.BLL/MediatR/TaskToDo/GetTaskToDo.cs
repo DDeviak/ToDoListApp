@@ -8,9 +8,9 @@ namespace ToDoListApp.BLL.MediatR.TaskToDo
     using ToDoListApp.DAL.Models;
     using ToDoListApp.DAL.Repositories.Interfaces;
 
-    public record GetTaskToDoQuery(Guid Id) : IRequest<Result<TaskToDoDTO?>>;
+    public record GetTaskToDoQuery(Guid Id) : IRequest<Result<TaskToDoDTO>>;
 
-    public class GetTaskToDoQueryHandler : IRequestHandler<GetTaskToDoQuery, Result<TaskToDoDTO?>>
+    public class GetTaskToDoQueryHandler : IRequestHandler<GetTaskToDoQuery, Result<TaskToDoDTO>>
     {
         private readonly ITaskToDoRepository _taskToDoRepository;
         private readonly IMapper _mapper;
@@ -21,10 +21,15 @@ namespace ToDoListApp.BLL.MediatR.TaskToDo
             _mapper = mapper;
         }
 
-        public async Task<Result<TaskToDoDTO?>> Handle(GetTaskToDoQuery request, CancellationToken cancellationToken)
+        public async Task<Result<TaskToDoDTO>> Handle(GetTaskToDoQuery request, CancellationToken cancellationToken)
         {
             TaskToDo? taskToDo = await _taskToDoRepository.GetByIdAsync(request.Id);
-            return Result.Ok(taskToDo is null ? null : _mapper.Map<TaskToDoDTO>(taskToDo));
+            if (taskToDo is null)
+            {
+                return Result.Fail("TaskToDo not found");
+            }
+
+            return Result.Ok(_mapper.Map<TaskToDoDTO>(taskToDo));
         }
     }
 }

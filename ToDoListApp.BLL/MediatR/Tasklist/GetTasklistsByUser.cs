@@ -24,7 +24,12 @@ namespace ToDoListApp.BLL.MediatR.Tasklist
         public async Task<Result<IEnumerable<TasklistDTO>>> Handle(GetTasklistsByUserQuery request, CancellationToken cancellationToken)
         {
             User? user = await _userRepository.GetByIdAsync(request.UserId);
-            return Result.Ok(_mapper.ProjectTo<TasklistDTO>(user?.Tasklists.AsQueryable()).AsEnumerable());
+            if (user is null)
+            {
+                return Result.Fail("User not found");
+            }
+
+            return Result.Ok(_mapper.ProjectTo<TasklistDTO>((user.Tasklists ?? []).AsQueryable()).AsEnumerable());
         }
     }
 }
