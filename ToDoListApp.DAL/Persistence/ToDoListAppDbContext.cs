@@ -1,12 +1,16 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using ToDoListApp.DAL.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace ToDoListApp.DAL.Persistence
 {
-    public class ToDoListAppDbContext : DbContext
+    public class ToDoListAppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
-        public DbSet<User> Users { get; set; }
+        public override DbSet<User> Users { get; set; }
+
         public DbSet<Tasklist> Tasklists { get; set; }
+
         public DbSet<TaskToDo> Tasks { get; set; }
 
         public ToDoListAppDbContext(DbContextOptions<ToDoListAppDbContext> options) : base(options)
