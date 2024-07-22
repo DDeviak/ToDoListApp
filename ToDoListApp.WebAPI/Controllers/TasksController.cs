@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.JsonPatch;
 using ToDoListApp.BLL.MediatR.TaskToDo;
 using ToDoListApp.BLL.DTO.TaskToDo;
 using Microsoft.AspNetCore.Authorization;
+using System.Net.Mime;
 
 [Authorize]
+[ProducesResponseType(401)]
 public class TasksController : BaseApiController
 {
     [HttpGet("{id:guid}")]
@@ -27,6 +29,7 @@ public class TasksController : BaseApiController
     }
 
     [HttpPost]
+    [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType(200, Type = typeof(TaskToDoDTO))]
     [ProducesResponseType(400)]
     public async Task<IActionResult> Create([FromBody] TaskToDoCreateDTO task)
@@ -35,6 +38,7 @@ public class TasksController : BaseApiController
     }
 
     [HttpPatch("{id:guid}")]
+    [Consumes(MediaTypeNames.Application.JsonPatch)]
     [ProducesResponseType(200, Type = typeof(TaskToDoDTO))]
     [ProducesResponseType(404)]
     public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] JsonPatchDocument<TaskToDoDTO> patch)

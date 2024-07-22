@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using ToDoListApp.BLL.DTO.User;
 using ToDoListApp.BLL.MediatR.User;
@@ -7,7 +8,8 @@ namespace ToDoListApp.WebAPI.Controllers;
 public class UsersController : BaseApiController
 {
     [HttpPost("register")]
-    [ProducesResponseType(200, Type = typeof(UserDTO))]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(200, Type = typeof(UserAuthenticationResponseDTO))]
     [ProducesResponseType(400)]
     public async Task<IActionResult> Register([FromBody] UserRegisterDTO user)
     {
@@ -15,7 +17,8 @@ public class UsersController : BaseApiController
     }
 
     [HttpPost("login")]
-    [ProducesResponseType(200, Type = typeof(UserDTO))]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(200, Type = typeof(UserAuthenticationResponseDTO))]
     [ProducesResponseType(400)]
     [ProducesResponseType(404)]
     public async Task<IActionResult> Login([FromBody] UserLoginDTO user)

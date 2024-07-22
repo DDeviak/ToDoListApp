@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using ToDoListApp.BLL.DTO.Tasklist;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Authorization;
+using System.Net.Mime;
 
 [Authorize]
+[ProducesResponseType(401)]
 public class TasklistsController : BaseApiController
 {
     [HttpGet("{id:guid}")]
@@ -26,6 +28,7 @@ public class TasklistsController : BaseApiController
     }
 
     [HttpPost]
+    [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType(200, Type = typeof(TasklistDTO))]
     [ProducesResponseType(400)]
     public async Task<IActionResult> Create([FromBody] TasklistCreateDTO tasklist)
@@ -34,6 +37,7 @@ public class TasklistsController : BaseApiController
     }
 
     [HttpPatch("{id:guid}")]
+    [Consumes(MediaTypeNames.Application.JsonPatch)]
     [ProducesResponseType(200, Type = typeof(TasklistDTO))]
     [ProducesResponseType(404)]
     public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] JsonPatchDocument<TasklistDTO> patch)
