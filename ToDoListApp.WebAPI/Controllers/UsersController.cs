@@ -7,7 +7,7 @@ namespace ToDoListApp.WebAPI.Controllers;
 
 public class UsersController : BaseApiController
 {
-    [HttpPost("register")]
+    [HttpPost]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType(200, Type = typeof(UserAuthenticationResponseDTO))]
     [ProducesResponseType(400)]
@@ -16,7 +16,7 @@ public class UsersController : BaseApiController
         return HandleResult(await Mediator.Send(new RegisterUserCommand(user)));
     }
 
-    [HttpPost("login")]
+    [HttpPost]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType(200, Type = typeof(UserAuthenticationResponseDTO))]
     [ProducesResponseType(400)]
