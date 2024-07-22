@@ -23,7 +23,7 @@ public class TasksController : BaseApiController
     [HttpGet("{id:guid}")]
     [ProducesResponseType(200, Type = typeof(List<TaskToDoDTO>))]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> GetByUser([FromRoute] Guid id)
+    public async Task<IActionResult> GetByList([FromRoute] Guid id)
     {
         return HandleResult(await Mediator.Send(new GetTaskToDoByTasklistQuery(id)));
     }
