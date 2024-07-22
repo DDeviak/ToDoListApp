@@ -5,6 +5,7 @@ namespace ToDoListApp.BLL.MediatR.Tasklist
     using AutoMapper;
     using FluentResults;
     using ToDoListApp.BLL.DTO.Tasklist;
+    using ToDoListApp.BLL.Mapping;
     using ToDoListApp.DAL.Models;
     using ToDoListApp.DAL.Repositories.Interfaces;
 
@@ -26,7 +27,7 @@ namespace ToDoListApp.BLL.MediatR.Tasklist
             Tasklist? tasklist = await _tasklistRepository.GetByIdAsync(request.Id);
             if(tasklist is null)
             {
-                return Result.Fail("Tasklist not found");
+                return Result.Fail<TasklistDTO>("Tasklist not found");
             }
 
             return Result.Ok(_mapper.Map<TasklistDTO>(tasklist));

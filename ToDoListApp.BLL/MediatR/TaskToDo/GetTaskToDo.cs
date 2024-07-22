@@ -26,7 +26,7 @@ namespace ToDoListApp.BLL.MediatR.TaskToDo
             TaskToDo? taskToDo = await _taskToDoRepository.GetByIdAsync(request.Id);
             if (taskToDo is null)
             {
-                return Result.Fail("TaskToDo not found");
+                return Result.Fail<TaskToDoDTO>("TaskToDo not found");
             }
 
             return Result.Ok(_mapper.Map<TaskToDoDTO>(taskToDo));

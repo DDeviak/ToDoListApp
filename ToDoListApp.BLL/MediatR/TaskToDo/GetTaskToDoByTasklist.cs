@@ -27,7 +27,7 @@ namespace ToDoListApp.BLL.MediatR.TaskToDo
             Tasklist? tasklist = await _tasklistRepository.GetByIdAsync(request.TasklistId);
             if (tasklist is null)
             {
-                return Result.Fail("Tasklist not found");
+                return Result.Fail<IEnumerable<TaskToDoDTO>>("Tasklist not found");
             }
 
             return Result.Ok(_mapper.ProjectTo<TaskToDoDTO>((tasklist.Tasks ?? []).AsQueryable()).AsEnumerable());

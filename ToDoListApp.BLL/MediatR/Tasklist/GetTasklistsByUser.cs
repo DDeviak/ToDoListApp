@@ -26,7 +26,7 @@ namespace ToDoListApp.BLL.MediatR.Tasklist
             User? user = await _userRepository.GetByIdAsync(request.UserId);
             if (user is null)
             {
-                return Result.Fail("User not found");
+                return Result.Fail<IEnumerable<TasklistDTO>>("User not found");
             }
 
             return Result.Ok(_mapper.ProjectTo<TasklistDTO>((user.Tasklists ?? []).AsQueryable()).AsEnumerable());
