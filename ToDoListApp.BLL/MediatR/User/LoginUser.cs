@@ -31,7 +31,7 @@ namespace ToDoListApp.BLL.MediatR.User
             User? user = await _userManager.FindByEmailAsync(request.UserLogin.Email);
             if (user == null)
             {
-                return Result.Fail("User not found",);
+                return Result.Fail("User not found");
             }
 
             bool isPasswordValid = await _userManager.CheckPasswordAsync(user, request.UserLogin.Password);
