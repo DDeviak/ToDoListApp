@@ -130,6 +130,11 @@ public static class Program
 
         app.UseHttpsRedirection();
 
+        app.UseCors(policy =>
+        {
+            policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:5173");
+        });
+
         app.UseAuthorization();
 
         app.MapControllers();
