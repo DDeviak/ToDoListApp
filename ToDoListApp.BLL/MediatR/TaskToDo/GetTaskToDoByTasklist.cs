@@ -13,24 +13,18 @@ namespace ToDoListApp.BLL.MediatR.TaskToDo
 
     public class GetTaskToDoByTasklistQueryHandler : IRequestHandler<GetTaskToDoByTasklistQuery, Result<IEnumerable<TaskToDoDTO>>>
     {
-        private readonly ITasklistRepository _tasklistRepository;
+        private readonly ITaskToDoRepository _taskToDoRepository;
         private readonly IMapper _mapper;
 
-        public GetTaskToDoByTasklistQueryHandler(ITasklistRepository tasklistRepository, IMapper mapper)
+        public GetTaskToDoByTasklistQueryHandler(ITaskToDoRepository taskToDoRepository, IMapper mapper)
         {
-            _tasklistRepository = tasklistRepository;
+            _taskToDoRepository = taskToDoRepository;
             _mapper = mapper;
         }
 
         public async Task<Result<IEnumerable<TaskToDoDTO>>> Handle(GetTaskToDoByTasklistQuery request, CancellationToken cancellationToken)
         {
-            Tasklist? tasklist = await _tasklistRepository.GetByIdAsync(request.TasklistId);
-            if (tasklist is null)
-            {
-                return Result.Fail<IEnumerable<TaskToDoDTO>>("Tasklist not found");
-            }
-
-            return Result.Ok(_mapper.ProjectTo<TaskToDoDTO>((tasklist.Tasks ?? []).AsQueryable()).AsEnumerable());
+            return Result.Ok(_mapper.ProjectTo<TaskToDoDTO>((await _taskToDoRepository.GetAllAsync()).Where(t => t.TasklistId == request.TasklistId).AsQueryable()).AsEnumerable());
         }
     }
 }
