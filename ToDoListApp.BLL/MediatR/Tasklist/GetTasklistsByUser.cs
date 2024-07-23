@@ -12,24 +12,18 @@ namespace ToDoListApp.BLL.MediatR.Tasklist
 
     public class GetTasklistsByUserQueryHandler : IRequestHandler<GetTasklistsByUserQuery, Result<IEnumerable<TasklistDTO>>>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly ITasklistRepository _tasklistRepository;
         private readonly IMapper _mapper;
 
-        public GetTasklistsByUserQueryHandler(IUserRepository userRepository, IMapper mapper)
+        public GetTasklistsByUserQueryHandler(ITasklistRepository tasklistRepository, IMapper mapper)
         {
-            _userRepository = userRepository;
+            _tasklistRepository = tasklistRepository;
             _mapper = mapper;
         }
 
         public async Task<Result<IEnumerable<TasklistDTO>>> Handle(GetTasklistsByUserQuery request, CancellationToken cancellationToken)
         {
-            User? user = await _userRepository.GetByIdAsync(request.UserId);
-            if (user is null)
-            {
-                return Result.Fail<IEnumerable<TasklistDTO>>("User not found");
-            }
-
-            return Result.Ok(_mapper.ProjectTo<TasklistDTO>((user.Tasklists ?? []).AsQueryable()).AsEnumerable());
+            return Result.Ok(_mapper.ProjectTo<TasklistDTO>((await _tasklistRepository.GetAllAsync()).Where(t => t.UserId == request.UserId).AsQueryable()).AsEnumerable());
         }
     }
 }
