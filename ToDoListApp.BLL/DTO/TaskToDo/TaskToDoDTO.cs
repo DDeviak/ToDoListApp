@@ -1,3 +1,7 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using ToDoListApp.DAL.Enums;
+
 namespace ToDoListApp.BLL.DTO.TaskToDo;
 public class TaskToDoDTO
 {
@@ -9,7 +13,9 @@ public class TaskToDoDTO
 
     public DateTime Deadline { get; set; }
 
+    [JsonProperty("todolistId")]
     public Guid TasklistId { get; set; }
 
-    public TaskStatus Status { get; set; }
+    [JsonProperty("status", ItemConverterType = typeof(StringEnumConverter))]
+    public ToDoListTaskStatus Status { get; set; }
 }
