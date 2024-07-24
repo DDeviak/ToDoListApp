@@ -51,15 +51,25 @@ public class TasklistsController : BaseApiController
     [ProducesResponseType(404)]
     public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] JsonPatchDocument<TasklistDTO> patch)
     {
+        if (patch is null)
+        {
+            return BadRequest("Patch document is null.");
+        }
+
         var result = await Mediator.Send(new GetTasklistQuery(id));
-        var tasklist = result.Value;
-        patch.ApplyTo(tasklist, ModelState);
+        var task = result.ValueOrDefault;
+        if (task is null)
+        {
+            return NotFound("Task not found.");
+        }
+
+        patch.ApplyTo(task, ModelState);
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        return Ok(await Mediator.Send(new UpdateTasklistCommand(tasklist)));
+        return HandleResult(await Mediator.Send(new UpdateTasklistCommand(task)));
     }
 
     [HttpDelete("{id:guid}")]

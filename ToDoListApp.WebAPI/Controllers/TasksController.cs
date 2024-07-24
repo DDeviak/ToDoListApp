@@ -52,15 +52,25 @@ public class TasksController : BaseApiController
     [ProducesResponseType(404)]
     public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] JsonPatchDocument<TaskToDoDTO> patch)
     {
+        if (patch is null)
+        {
+            return BadRequest("Patch document is null.");
+        }
+
         var result = await Mediator.Send(new GetTaskToDoQuery(id));
-        var task = result.Value;
+        var task = result.ValueOrDefault;
+        if (task is null)
+        {
+            return NotFound("Task not found.");
+        }
+
         patch.ApplyTo(task, ModelState);
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        return Ok(await Mediator.Send(new UpdateTaskToDoCommand(task)));
+        return HandleResult(await Mediator.Send(new UpdateTaskToDoCommand(task)));
     }
 
     [HttpDelete("{id:guid}")]
