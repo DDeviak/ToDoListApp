@@ -36,6 +36,15 @@ public class TasklistsController : BaseApiController
         return HandleResult(await Mediator.Send(new CreateTasklistCommand(tasklist)));
     }
 
+    [HttpPut]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(200, Type = typeof(TasklistDTO))]
+    [ProducesResponseType(400)]
+    public async Task<IActionResult> Put([FromBody] TasklistDTO tasklist)
+    {
+        return HandleResult(await Mediator.Send(new UpdateTasklistCommand(tasklist)));
+    }
+
     [HttpPatch("{id:guid}")]
     [Consumes(MediaTypeNames.Application.JsonPatch)]
     [ProducesResponseType(200, Type = typeof(TasklistDTO))]

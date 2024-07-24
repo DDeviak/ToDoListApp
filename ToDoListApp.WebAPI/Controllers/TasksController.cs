@@ -37,6 +37,15 @@ public class TasksController : BaseApiController
         return HandleResult(await Mediator.Send(new CreateTaskToDoCommand(task)));
     }
 
+    [HttpPut]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(200, Type = typeof(TaskToDoDTO))]
+    [ProducesResponseType(400)]
+    public async Task<IActionResult> Put([FromBody] TaskToDoDTO task)
+    {
+        return HandleResult(await Mediator.Send(new UpdateTaskToDoCommand(task)));
+    }
+
     [HttpPatch("{id:guid}")]
     [Consumes(MediaTypeNames.Application.JsonPatch)]
     [ProducesResponseType(200, Type = typeof(TaskToDoDTO))]
