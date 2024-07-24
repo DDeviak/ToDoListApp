@@ -1,3 +1,5 @@
+using ToDoListApp.DAL.Enums;
+
 namespace ToDoListApp.DAL.Models;
 public class TaskToDo
 {
@@ -13,5 +15,5 @@ public class TaskToDo
 
     public Tasklist Tasklist { get; set; } = null!;
 
-    public TaskStatus Status { get; set; }
+    public ToDoListTaskStatus Status { get; set; }
 }

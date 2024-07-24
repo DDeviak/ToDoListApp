@@ -1,6 +1,6 @@
 namespace ToDoListApp.DAL.Enums
 {
-    public enum TaskStatus
+    public enum ToDoListTaskStatus
     {
         ToDo,
         InProgress,
