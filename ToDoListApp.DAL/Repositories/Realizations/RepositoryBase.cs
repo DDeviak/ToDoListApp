@@ -1,7 +1,7 @@
-using ToDoListApp.DAL.Repositories.Interfaces;
-using ToDoListApp.DAL.Persistence;
-using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using ToDoListApp.DAL.Persistence;
+using ToDoListApp.DAL.Repositories.Interfaces;
 
 namespace ToDoListApp.DAL.Repositories.Realizations
 {
@@ -17,7 +17,13 @@ namespace ToDoListApp.DAL.Repositories.Realizations
 
         public async Task<T?> GetByIdAsync(Guid id)
         {
-            return await _context.Set<T>().FindAsync(id);
+            var entity = await _context.Set<T>().FindAsync(id);
+            if (entity is not null)
+            {
+                _context.Entry(entity).State = EntityState.Detached;
+            }
+
+            return entity;
         }
 
         public async Task<T?> GetSingleOrDefaultAsync(Expression<Func<T, bool>> predicate)
@@ -27,7 +33,7 @@ namespace ToDoListApp.DAL.Repositories.Realizations
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return await _context.Set<T>().ToListAsync();
+            return await _context.Set<T>().AsNoTracking().ToListAsync();
         }
 
         public async Task<T> CreateAsync(T entity)
