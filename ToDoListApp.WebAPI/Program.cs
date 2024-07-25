@@ -14,6 +14,7 @@ using ToDoListApp.DAL.Models;
 using ToDoListApp.DAL.Persistence;
 using ToDoListApp.DAL.Repositories.Interfaces;
 using ToDoListApp.DAL.Repositories.Realizations;
+using Serilog;
 
 public static class Program
 {
@@ -32,7 +33,13 @@ public static class Program
         var jwtSection = builder.Configuration.GetSection(nameof(JwtSettings));
         builder.Services.Configure<JwtSettings>(jwtSection);
 
+        Log.Logger = new LoggerConfiguration()
+                    .WriteTo.Console()
+                    .CreateLogger();
+
         // Add services to the container.
+        builder.Services.AddSingleton<ILogger>(Log.Logger);
+
         builder.Services.AddDbContext<ToDoListAppDbContext>(options =>
             {
                 options.UseNpgsql(connectionString);
@@ -89,6 +96,7 @@ public static class Program
                 opts.SerializerSettings.Converters.Add(new StringEnumConverter());
                 opts.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
             });
+
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
