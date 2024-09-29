@@ -15,7 +15,7 @@ internal class DesignTimeToDoListAppDbContextFactory : IDesignTimeDbContextFacto
         var builder = new DbContextOptionsBuilder<ToDoListAppDbContext>();
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-        builder.UseNpgsql(connectionString);
+        builder.UseSqlServer(connectionString);
 
         return new ToDoListAppDbContext(builder.Options);
     }

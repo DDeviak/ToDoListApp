@@ -42,7 +42,7 @@ public static class Program
 
         builder.Services.AddDbContext<ToDoListAppDbContext>(options =>
             {
-                options.UseNpgsql(connectionString);
+                options.UseSqlServer(connectionString);
             });
 
         builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -140,7 +140,7 @@ public static class Program
 
         app.UseCors(policy =>
         {
-            policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:5173");
+            policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:5173", "https://present-dodo-equipped.ngrok-free.app/");
         });
 
         app.UseAuthorization();
